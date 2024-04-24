@@ -4,41 +4,34 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Mascota } from 'src/app/interfaces/mascota';
-
-const ELEMENT_DATA: Mascota[] = [
-  { nombre: 'Lucas', edad: 5, raza: 'Pastor Alemán', color: 'Amarillo', peso: 10 },
-  { nombre: 'Bella', edad: 3, raza: 'Labrador Retriever', color: 'Negro', peso: 12 },
-  { nombre: 'Max', edad: 2, raza: 'Bulldog Francés', color: 'Marrón', peso: 8 },
-  { nombre: 'Luna', edad: 4, raza: 'Golden Retriever', color: 'Dorado', peso: 11 },
-  { nombre: 'Rocky', edad: 6, raza: 'Rottweiler', color: 'Negro y marrón', peso: 15 },
-  { nombre: 'Coco', edad: 1, raza: 'Chihuahua', color: 'Marrón claro', peso: 3 },
-  { nombre: 'Daisy', edad: 4, raza: 'Bulldog Inglés', color: 'Blanco y marrón', peso: 14 },
-  { nombre: 'Leo', edad: 7, raza: 'Dálmata', color: 'Blanco y negro', peso: 12 },
-  { nombre: 'Lola', edad: 2, raza: 'Boxer', color: 'Atigrado', peso: 9 },
-  { nombre: 'Milo', edad: 3, raza: 'Poodle', color: 'Blanco', peso: 7 }
-];
-
+import { MascotaService } from 'src/app/services/mascota.service';
 
 @Component({
   selector: 'app-listado-mascotas',
   templateUrl: './listado-mascotas.component.html',
   styleUrls: ['./listado-mascotas.component.css']
 })
-export class ListadoMascotasComponent implements OnInit, AfterViewInit  {
+export class ListadoMascotasComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['nombre', 'edad', 'raza', 'color', 'peso', 'acciones'];
-  dataSource = new MatTableDataSource<Mascota>(ELEMENT_DATA);
+  dataSource = new MatTableDataSource<Mascota>();
   loading: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private _snackBar: MatSnackBar) {}
+  constructor(private _snackBar: MatSnackBar, private _mascotaService: MascotaService) { }
+
+  ngOnInit(): void {
+    this.obtenerMascotas();
+  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     this.dataSource.sort = this.sort;
+    if(this.dataSource.data.length > 0) {
+      this.paginator._intl.itemsPerPageLabel = 'Items por pagina'
+    }
   }
 
   applyFilter(event: Event) {
@@ -59,12 +52,24 @@ export class ListadoMascotasComponent implements OnInit, AfterViewInit  {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'top'
-      
+
       });
     }, 3000);
   }
 
-  ngOnInit(): void {
+  obtenerMascotas() {
+    this.loading= true;
+    this._mascotaService.getMascotas().subscribe({
+      next: (data) => {
+        this.dataSource.data = data;
+        this.loading = false;
+      },
+      error: error => {
+        console.error(error);
+        alert('Ocurrio un error al obtener las mascotas');
+        this.loading = false;
+      }
+    });
   }
 
 }
