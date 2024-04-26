@@ -47,10 +47,8 @@ export class ListadoMascotasComponent implements OnInit, AfterViewInit {
     this.loading = true;
     this._mascotaService.deleteMascota(id).subscribe({
       next: () => {
-        setTimeout(() => {
-          this.loading = false;
-          this.mensajeExito();
-        }, 3000);
+        this.loading = false;
+        this.mensajeExito();
         this.obtenerMascotas();
       },
       error: error => {
