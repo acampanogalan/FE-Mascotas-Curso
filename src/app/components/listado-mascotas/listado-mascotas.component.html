@@ -50,7 +50,7 @@
             <th mat-header-cell *matHeaderCellDef> <button routerLink="/agregarMascota" class="btn-agregar" mat-raised-button color="primary">Añadir</button> </th>
             <td mat-cell *matCellDef="let element">
 
-                <mat-icon [routerLink]="['/verMascota', 1]" matTooltip="Buscar">search</mat-icon>
+                <mat-icon [routerLink]="['/verMascota', element.id]" matTooltip="Buscar">search</mat-icon>
                 <mat-icon routerLink="/editarMascota/2" class="edit">edit</mat-icon>
                 <mat-icon (click)="eliminarMascota()" matTooltip="Eliminar" class="delete">delete</mat-icon>
             </td>
