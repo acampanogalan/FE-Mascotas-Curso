@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Mascota } from '../../interfaces/mascota';
+import { MascotaService } from 'src/app/services/mascota.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-agregar-editar-mascota',
@@ -12,7 +15,11 @@ export class AgregarEditarMascotaComponent implements OnInit {
 
   form: FormGroup
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private _mascotaService: MascotaService,
+    private _snackBar: MatSnackBar,
+    private router: Router
+  ) {
     this.form = this.fb.group({
       nombre: ['', Validators.required],
       edad: ['', Validators.required],
@@ -29,7 +36,7 @@ export class AgregarEditarMascotaComponent implements OnInit {
   agregarMascota() {
     // const nombre = this.form.get('nombre')?.value;
 
-    const Mascota: Mascota = {
+    const mascota: Mascota = {
       nombre : this.form.value.nombre,
       edad : this.form.value.edad,
       raza : this.form.value.raza,
@@ -37,7 +44,24 @@ export class AgregarEditarMascotaComponent implements OnInit {
       peso : this.form.value.peso
     }
 
-    console.log(Mascota)
+    this._mascotaService.addNewMascota(mascota).subscribe({
+      next: (data) => {
+        this.mensajeExito();
+        this.router.navigate(['/listMascotas']);
+      },
+      error: error => {
+        console.error(error);
+        alert('Ocurrio un error al agregar la mascota');
+      }
+    });
+  }
+
+  mensajeExito() {
+    this._snackBar.open('La mascota fue registrada con exito', '', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    });
   }
 
 }
