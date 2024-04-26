@@ -29,7 +29,7 @@ export class ListadoMascotasComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    if(this.dataSource.data.length > 0) {
+    if (this.dataSource.data.length > 0) {
       this.paginator._intl.itemsPerPageLabel = 'Items por pagina'
     }
   }
@@ -43,22 +43,34 @@ export class ListadoMascotasComponent implements OnInit, AfterViewInit {
     }
   }
 
-  eliminarMascota() {
+  eliminarMascota(id: number) {
     this.loading = true;
+    this._mascotaService.deleteMascota(id).subscribe({
+      next: () => {
+        setTimeout(() => {
+          this.loading = false;
+          this.mensajeExito();
+        }, 3000);
+        this.obtenerMascotas();
+      },
+      error: error => {
+        console.error(error);
+        alert('Ocurrio un error al eliminar la mascota');
+        this.loading = false;
+      }
+    });
+  }
 
-    setTimeout(() => {
-      this.loading = false;
-      this._snackBar.open('La mascota fue eliminada con exito', '', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-
-      });
-    }, 3000);
+  mensajeExito() {
+    this._snackBar.open('La mascota fue eliminada con exito', '', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    });
   }
 
   obtenerMascotas() {
-    this.loading= true;
+    this.loading = true;
     this._mascotaService.getMascotas().subscribe({
       next: (data) => {
         this.dataSource.data = data;
