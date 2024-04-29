@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Mascota } from 'src/app/interfaces/mascota';
 import { MascotaService } from 'src/app/services/mascota.service';
+import { DeleteDialogComponent } from 'src/app/shared/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-listado-mascotas',
@@ -20,7 +22,7 @@ export class ListadoMascotasComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private _snackBar: MatSnackBar, private _mascotaService: MascotaService) { }
+  constructor(private _snackBar: MatSnackBar, private _mascotaService: MascotaService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.obtenerMascotas();
@@ -42,6 +44,18 @@ export class ListadoMascotasComponent implements OnInit, AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  openDialog(id: number) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent,{
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.eliminarMascota(id);
+      }
+    });
+  }
+
 
   eliminarMascota(id: number) {
     this.loading = true;

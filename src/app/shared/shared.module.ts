@@ -17,15 +17,18 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatGridListModule} from '@angular/material/grid-list';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDialogModule } from '@angular/material/dialog';
 
 //Components
 import { SpinnerComponent } from './spinner/spinner.component';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [
-    SpinnerComponent
+    SpinnerComponent,
+    DeleteDialogComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +46,8 @@ import { SpinnerComponent } from './spinner/spinner.component';
     MatProgressBarModule,
     MatGridListModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule
   ], exports: [
     MatSlideToggleModule,
     MatTableModule,
@@ -60,7 +64,9 @@ import { SpinnerComponent } from './spinner/spinner.component';
     MatProgressBarModule,
     MatGridListModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule,
+    DeleteDialogComponent
   ]
 })
 export class SharedModule { }
